@@ -3,7 +3,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
 
-from quart import render_template, redirect, url_for, flash
+from quart import request, render_template, redirect, url_for, flash
 
 from blueprints.meta import meta_bp
 
@@ -11,7 +11,7 @@ import config
 from forms import SendReportForm
 
 
-def send_email(email: str, image_data: str, message: str):
+def send_email(email: str, message: str, files: list):
     sender_email = config.SMTP_USERNAME
     receiver_email = email
 
@@ -23,11 +23,12 @@ def send_email(email: str, image_data: str, message: str):
     body = f"Message: {message}"
     msg.attach(MIMEText(body, "plain"))
 
-    image_attachment = MIMEApplication(image_data, _subtype="image")
-    image_attachment.add_header(
-        "Content-Disposition", "attachment", filename="image.jpg"
-    )
-    msg.attach(image_attachment)
+    for file in files:
+        media_attachment = MIMEApplication(file.read(), "octet-stream")
+        media_attachment.add_header(
+            "Content-Disposition", "attachment", filename="image.jpg"
+        )
+        msg.attach(media_attachment)
 
     with smtplib.SMTP(config.SMTP_HOST, config.SMTP_PORT) as server:
         server.starttls()
@@ -42,11 +43,12 @@ async def _index():
     if await form.validate_on_submit():
         email = form.email.data
         message = form.message.data
-        image = form.image.data.read()
 
-        send_email(email, image, message or "None")
+        files = (await request.files).getlist("media")
 
-        await flash("Email sent successfully!", "success")
+        send_email(email, message or "None", files)
+
+        await flash("Email sent.", "success")
 
         return redirect(url_for("meta._index"))
 

@@ -10,16 +10,18 @@ class SendReportForm(QuartForm):
         validators=[Email(), DataRequired()],
     )
 
-    # noinspection PyTypeChecker
-    image = FileField(
-        "Image",
-        validators=[
-            FileRequired(),
-            FileAllowed(["jpg", "png"], "Images only!"),
-        ],
-    )
-
     message = TextAreaField(
         "Message: ",
         validators=[Length(max=1000)],
+    )
+
+    # noinspection PyTypeChecker
+    media = FileField(
+        "Media",
+        validators=[
+            FileRequired(),
+            FileAllowed(
+                ["jpg", "jpeg", "png", "mp4"], "Only images and videos are allowed."
+            ),
+        ],
     )
