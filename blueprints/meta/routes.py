@@ -26,7 +26,7 @@ def send_email(email: str, message: str, files: list):
     for file in files:
         media_attachment = MIMEApplication(file.read(), "octet-stream")
         media_attachment.add_header(
-            "Content-Disposition", "attachment", filename="image.jpg"
+            "Content-Disposition", "attachment", filename=file.filename
         )
         msg.attach(media_attachment)
 

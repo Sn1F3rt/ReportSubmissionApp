@@ -34,6 +34,10 @@
             background-color: #0056b3;
             border-color: #0056b3;
         }
+
+        .validation-error {
+            color: red;
+        }
     </style>
 </head>
 
@@ -54,11 +58,12 @@
                     </div>
                     <div class="form-group" id="fileFields">
                         <label for="media">Media:</label>
+                        <span class="validation-error">{{ ', '.join(form.media.errors) }}</span><br>
                         <div>
                             {{ form.media(class="form-control-file") }}
                         </div>
                     </div>
-                    <button type="button" class="btn btn-primary btn-block" onclick="addFileField()">Add File</button>
+                    <button type="button" class="btn btn-primary btn-block" onclick="addFileField()">Add Media</button>
 
                     <button type="submit" class="btn btn-primary btn-block">Submit</button>
                 </form>
