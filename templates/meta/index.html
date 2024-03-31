@@ -38,6 +38,16 @@
         .validation-error {
             color: red;
         }
+
+        .file-upload {
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .remove-button {
+            vertical-align: middle;
+            margin-left: 10px;
+        }
     </style>
 </head>
 
@@ -80,8 +90,12 @@
         function addFileField() {
             let fileFields = document.getElementById('fileFields');
             let newFileField = document.createElement('div');
-            newFileField.innerHTML = '{{ form.media(class="form-control-file") }}';
+            newFileField.innerHTML = '{{ form.media(class="file-upload") }} <button type="button" class="remove-button" onclick="removeFileField(this)">X</button>';
             fileFields.appendChild(newFileField);
+        }
+
+        function removeFileField(button) {
+            button.parentNode.remove();
         }
     </script>
 
